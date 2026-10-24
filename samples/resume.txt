@@ -1,0 +1,23 @@
+ALEX MORGAN
+Computer Science Student | alex@example.com | github.com/example
+
+EDUCATION
+Bachelor of Science in Computer Science, expected graduation 2027.
+
+SKILLS
+JavaScript, HTML, CSS, Python, Git, React.
+
+PROJECTS
+Student Restaurant Ordering App | React, JavaScript, HTML, CSS
+- Built a React interface for browsing a restaurant menu and adding items to a cart.
+- Used CSS media queries to make the menu page work on mobile screens.
+- Worked with two classmates and used Git to share code.
+
+Python Inventory Tool | Python
+- Wrote a Python script to track product quantities in a CSV file.
+- Checked the script manually with sample inventory entries.
+
+EXPERIENCE
+Campus Computer Lab Assistant
+- Helped students troubleshoot login and printer problems.
+- Explained technical steps to students with different experience levels.

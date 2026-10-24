@@ -1,0 +1,19 @@
+Front-End Developer Intern
+
+We are looking for a student who can help improve a restaurant ordering website.
+The intern will build interfaces with React and JavaScript, turn designs into
+responsive pages, and collaborate with other developers.
+
+Required qualifications:
+- Experience building user interfaces with React and JavaScript.
+- Knowledge of HTML, CSS, and responsive layouts for mobile screens.
+- Experience using Git to collaborate on a team project.
+- Ability to explain technical problems clearly.
+
+Preferred qualifications:
+- Experience fetching data from REST APIs.
+- Experience writing automated tests for web applications.
+- Familiarity with web accessibility practices.
+
+School projects are welcome. Please describe what you personally built and the
+tools you used. This internship does not require previous paid developer work.

@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Compare your resume with a job description, inspect the evidence, and improve your bullet points with ResumeFit."
+    />
+    <meta name="theme-color" content="#2457db" />
+    <title>ResumeFit — AI Resume Reviewer</title>
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='favicon.svg') }}"
+      type="image/svg+xml"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to resume reviewer</a>
+    <header class="site-header">
+      <nav class="nav-shell" aria-label="Main navigation">
+        <a class="brand" href="#top" aria-label="ResumeFit home"
+          ><span class="brand-mark">R<span></span></span
+          ><span>ResumeFit</span></a
+        >
+        <div class="nav-links">
+          <a href="#how-it-works">How it works</a><a href="#about">About</a>
+        </div>
+        <a class="button button-small button-dark" href="#workspace"
+          ><span class="nav-cta-full">Review your resume</span
+          ><span class="nav-cta-short">Start review</span
+          ><span aria-hidden="true">↗</span></a
+        >
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero page-shell" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <span class="eyebrow"
+            ><span class="small-dot"></span> AI feedback. Your actual
+            experience.</span
+          >
+          <h1 id="hero-title">
+            See how your resume<br />
+            fits <span>the role.</span>
+          </h1>
+          <p class="hero-description">
+            Turn a job description into useful feedback. Find the experience
+            that matches, see what's missing, and make your bullet points
+            clearer.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#workspace"
+              >Start your review <span aria-hidden="true">→</span></a
+            ><a class="text-link" href="#how-it-works">See how it works</a>
+          </div>
+          <div class="hero-notes">
+            <span><span aria-hidden="true">✓</span> No account needed</span
+            ><span><span aria-hidden="true">✓</span> PDF, DOCX, or text</span>
+          </div>
+        </div>
+        <aside class="hero-panel" aria-label="What your review includes">
+          <div class="panel-topline">
+            <span class="mini-document" aria-hidden="true">↗</span
+            ><span>One review. Three useful views.</span>
+          </div>
+          <div class="preview-feature">
+            <span class="feature-icon blue" aria-hidden="true">01</span>
+            <div>
+              <h2>Find the connection</h2>
+              <p>Match job requirements with evidence from your resume.</p>
+            </div>
+          </div>
+          <div class="preview-feature">
+            <span class="feature-icon mint" aria-hidden="true">02</span>
+            <div>
+              <h2>Make your wording clearer</h2>
+              <p>
+                Improve existing bullets while keeping your real experience.
+              </p>
+            </div>
+          </div>
+          <div class="preview-feature">
+            <span class="feature-icon peach" aria-hidden="true">03</span>
+            <div>
+              <h2>Know what to work on</h2>
+              <p>Get specific next steps for this application.</p>
+            </div>
+          </div>
+          <div class="panel-bottom">
+            <span class="small-dot"></span> Powered by the Gemini API
+          </div>
+        </aside>
+      </section>
+
+      <section
+        class="how-section"
+        id="how-it-works"
+        aria-labelledby="how-title"
+      >
+        <div class="page-shell how-grid">
+          <h2 id="how-title">From documents<br />to a clearer application.</h2>
+          <div class="how-step">
+            <span>01</span>
+            <h3>Add your resume</h3>
+            <p>Paste text or import a document.</p>
+          </div>
+          <div class="how-step">
+            <span>02</span>
+            <h3>Add the job</h3>
+            <p>Include its requirements and responsibilities.</p>
+          </div>
+          <div class="how-step">
+            <span>03</span>
+            <h3>Review and refine</h3>
+            <p>Check the evidence and edit the suggestions.</p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="workspace page-shell"
+        id="workspace"
+        aria-labelledby="workspace-title"
+      >
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow muted">YOUR WORKSPACE</span>
+            <h2 id="workspace-title">Let's work on your next application.</h2>
+            <p>Add both documents to get feedback specific to the role.</p>
+          </div>
+          <div class="workspace-tools">
+            <button
+              class="button button-outline"
+              id="sample-button"
+              type="button"
+            >
+              Use sample</button
+            ><button
+              class="button button-quiet"
+              id="clear-button"
+              type="button"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+        <div
+          id="error-banner"
+          class="alert alert-error"
+          role="alert"
+          hidden
+        ></div>
+        <div
+          id="service-notice"
+          class="alert alert-info"
+          role="status"
+          hidden
+        ></div>
+
+        <form id="review-form" novalidate>
+          <div class="document-grid">
+            <section class="document-card" aria-labelledby="resume-title">
+              <div class="document-heading">
+                <div class="card-title">
+                  <span class="document-icon" aria-hidden="true">01</span>
+                  <div>
+                    <h3 id="resume-title">Your resume</h3>
+                    <p>Your experience, skills, and projects.</p>
+                  </div>
+                </div>
+                <button
+                  class="button button-upload"
+                  id="upload-button"
+                  type="button"
+                >
+                  ↑ <span>Upload</span>
+                </button>
+              </div>
+              <label class="sr-only" for="resume-input">Resume text</label
+              ><textarea
+                id="resume-input"
+                name="resume"
+                placeholder="Paste your resume here, or upload a file above."
+                spellcheck="false"
+              ></textarea>
+              <input
+                class="sr-only"
+                type="file"
+                id="resume-file"
+                accept=".pdf,.docx,.txt"
+                aria-label="Choose a resume file"
+                tabindex="-1"
+              />
+              <div class="document-footer">
+                <span id="file-status" aria-live="polite"
+                  >PDF, DOCX, TXT · Up to 3 MB</span
+                ><span id="resume-count">0 / 12,000</span>
+              </div>
+            </section>
+            <section class="document-card" aria-labelledby="job-title">
+              <div class="document-heading">
+                <div class="card-title">
+                  <span class="document-icon lilac" aria-hidden="true">02</span>
+                  <div>
+                    <h3 id="job-title">Job description</h3>
+                    <p>The role you want to apply for.</p>
+                  </div>
+                </div>
+                <span class="text-badge">Paste text</span>
+              </div>
+              <label class="sr-only" for="job-input">Job description</label
+              ><textarea
+                id="job-input"
+                name="job"
+                placeholder="Paste the job description, including requirements and responsibilities."
+                spellcheck="false"
+              ></textarea>
+              <div class="document-footer">
+                <span>Include required and preferred skills.</span
+                ><span id="job-count">0 / 8,000</span>
+              </div>
+            </section>
+          </div>
+
+          <div class="review-options">
+            <label class="checkbox-label"
+              ><input id="examples-checkbox" type="checkbox" checked /><span
+                >Use example-guided feedback</span
+              ></label
+            ><span class="option-hint"
+              >Uses few-shot prompting to guide the review.</span
+            >
+            <details class="demo-access" id="access-section" hidden>
+              <summary>Demo access</summary>
+              <label for="access-code">Access code</label
+              ><input
+                id="access-code"
+                type="password"
+                autocomplete="off"
+                placeholder="Provided by the site owner"
+              />
+            </details>
+          </div>
+          <div class="review-action">
+            <div>
+              <strong>Ready for a closer look?</strong>
+              <p>
+                Your documents are sent to Gemini for this review. Read the
+                <a href="#privacy">data note</a>.
+              </p>
+            </div>
+            <button
+              class="button button-primary"
+              id="review-button"
+              type="submit"
+            >
+              <span>Review my resume</span><span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </form>
+
+        <div
+          class="loading-panel"
+          id="loading-panel"
+          role="status"
+          aria-live="polite"
+          hidden
+        >
+          <span class="spinner" aria-hidden="true"></span>
+          <div>
+            <strong>Reading your documents</strong>
+            <p>
+              Comparing requirements and preparing suggestions. This can take a
+              moment.
+            </p>
+          </div>
+        </div>
+
+        <section
+          class="empty-state"
+          id="empty-state"
+          aria-label="Review results"
+        >
+          <span class="empty-icon" aria-hidden="true">↗</span>
+          <h3>Your review will appear here.</h3>
+          <p>
+            Add your documents, or try the sample to explore the full process.
+          </p>
+        </section>
+
+        <section
+          class="results"
+          id="results"
+          aria-labelledby="results-title"
+          hidden
+        >
+          <div class="section-heading results-heading">
+            <div>
+              <span class="eyebrow muted">YOUR FEEDBACK</span>
+              <h2 id="results-title" tabindex="-1">
+                A closer look at your fit.
+              </h2>
+              <p id="result-source"></p>
+            </div>
+            <button
+              class="button button-outline"
+              id="download-button"
+              type="button"
+            >
+              ↓ Download review
+            </button>
+          </div>
+          <div class="alert alert-info" id="stale-banner" role="status" hidden>
+            Your documents or review options changed. Run a new review before
+            refining the suggestions below.
+          </div>
+          <div class="review-summary" id="review-summary"></div>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <span>Evidence coverage</span
+              ><strong id="coverage-value">—</strong>
+              <p>Across the extracted requirements</p>
+            </div>
+            <div class="metric-card">
+              <span>Supported requirements</span
+              ><strong class="green-text" id="supported-value">—</strong>
+              <p>Relevant resume evidence found</p>
+            </div>
+            <div class="metric-card">
+              <span>Partial or not shown</span
+              ><strong class="amber-text" id="gaps-value">—</strong>
+              <p>Areas to explain or develop</p>
+            </div>
+          </div>
+          <p class="score-note">
+            Coverage summarizes evidence for the requirements selected by AI. It
+            is not an ATS score or a hiring prediction.
+          </p>
+          <div class="results-card">
+            <div class="tabs" role="tablist" aria-label="Review views">
+              <button
+                id="tab-requirements"
+                class="tab active"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="panel-requirements"
+              >
+                Requirements</button
+              ><button
+                id="tab-bullets"
+                class="tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="panel-bullets"
+                tabindex="-1"
+              >
+                Bullet suggestions</button
+              ><button
+                id="tab-priorities"
+                class="tab"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="panel-priorities"
+                tabindex="-1"
+              >
+                Next steps
+              </button>
+            </div>
+            <section
+              class="tab-panel"
+              id="panel-requirements"
+              role="tabpanel"
+              aria-labelledby="tab-requirements"
+            >
+              <div class="tab-intro">
+                <h3>Where your experience connects</h3>
+                <p>
+                  Open a requirement to inspect the excerpts behind the
+                  feedback.
+                </p>
+              </div>
+              <div id="requirements-list"></div>
+            </section>
+            <section
+              class="tab-panel"
+              id="panel-bullets"
+              role="tabpanel"
+              aria-labelledby="tab-bullets"
+              hidden
+            >
+              <div class="tab-intro">
+                <h3>Say it more clearly</h3>
+                <p>
+                  Check each suggestion for accuracy. Refine it to match your
+                  voice.
+                </p>
+              </div>
+              <div id="bullets-list"></div>
+            </section>
+            <section
+              class="tab-panel"
+              id="panel-priorities"
+              role="tabpanel"
+              aria-labelledby="tab-priorities"
+              hidden
+            >
+              <div class="tab-intro">
+                <h3>Your next edits</h3>
+                <p>A short list of improvements for this application.</p>
+              </div>
+              <ol class="priority-list" id="priorities-list"></ol>
+            </section>
+          </div>
+        </section>
+      </section>
+
+      <section class="about-section" id="about">
+        <div class="page-shell about-grid">
+          <div>
+            <span class="eyebrow muted">ABOUT THE PROJECT</span>
+            <h2>Useful feedback starts<br />with real evidence.</h2>
+            <p>
+              ResumeFit is a CS4680 project that uses prompt engineering to help
+              students describe their existing experience more clearly.
+            </p>
+          </div>
+          <div class="about-details">
+            <details>
+              <summary>How the AI is guided</summary>
+              <p>
+                <strong>Persona:</strong> The model acts as a recruiter helping
+                students and recent graduates.
+              </p>
+              <p>
+                <strong>Few-shot:</strong> Two examples show how to compare
+                requirements, use source excerpts, and rewrite bullets. You can
+                switch examples off for a comparison.
+              </p>
+              <p>
+                <strong>Iterative refinement:</strong> A rewrite uses the
+                original source, the previous draft, and your requested change.
+              </p>
+            </details>
+            <details>
+              <summary>What the coverage number means</summary>
+              <p>
+                Required items have weight 2; preferred items have weight 1.
+                Supported gets full credit, Partial gets half, and Not shown
+                gets zero. The extracted requirements and their interpretation
+                can vary by model.
+              </p>
+            </details>
+            <details id="privacy">
+              <summary>Your documents and data</summary>
+              <p>
+                Your text is sent through this website's server to Google's
+                Gemini API. The app has no resume database and does not
+                intentionally save uploaded files. Google processes API inputs
+                under the project's applicable terms; free-tier content may be
+                used to improve its products.
+              </p>
+              <p>
+                Document text and results remain in this browser tab while it is
+                open. Clear removes the current workspace. Always check
+                suggestions before using them, and use redacted documents for a
+                public demo.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="page-shell site-footer">
+      <a class="brand footer-brand" href="#top"
+        ><span class="brand-mark">R<span></span></span><span>ResumeFit</span></a
+      >
+      <p>Built for clearer applications. Powered by Gemini.</p>
+      <a href="#workspace">Back to your review ↑</a>
+    </footer>
+  </body>
+</html>
