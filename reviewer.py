@@ -1,10 +1,14 @@
 import json
+from typing import Callable, TypeVar
 
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 
 from models import Review, Refinement, check_numbers, validate_inputs, verify_review
 from prompts import review_messages, refinement_messages
 from providers import AIConfig, AIError, generate
+
+
+ResultT = TypeVar("ResultT", bound=BaseModel)
 
 
 def parse_json(text: str) -> dict:
@@ -18,7 +22,12 @@ def parse_json(text: str) -> dict:
     return result
 
 
-def structured_result(config, messages, output_type, verifier):
+def structured_result(
+    config: AIConfig,
+    messages: list[dict[str, str]],
+    output_type: type[ResultT],
+    verifier: Callable[[ResultT], None],
+) -> ResultT:
     schema = output_type.model_json_schema()
     conversation = [dict(message) for message in messages]
     conversation[0]["content"] += "\nOutput JSON schema:\n" + json.dumps(schema)
@@ -30,8 +39,7 @@ def structured_result(config, messages, output_type, verifier):
             return result
         except (ValueError, ValidationError) as error:
             if attempt:
-                raise AIError("The model could not produce a valid, source-checked result after one repair. "
-                              "Try shorter inputs or another model. Your last successful result is preserved.") from None
+                break
             if isinstance(error, ValidationError):
                 detail = "; ".join(".".join(str(p) for p in item["loc"]) + ": " + item["msg"]
                                    for item in error.errors(include_input=False, include_url=False)[:5])
@@ -45,6 +53,8 @@ def structured_result(config, messages, output_type, verifier):
                  + " Follow the original task and schema. Use exact source quotations and no invented facts. "
                    "Return the complete corrected JSON object."},
             ])
+    raise AIError("The model could not produce a valid, source-checked result after one repair. "
+                  "Try shorter inputs or another model. Your last successful result is preserved.") from None
 
 
 def review_resume(config: AIConfig, resume: str, job: str, use_examples: bool = True) -> Review:
