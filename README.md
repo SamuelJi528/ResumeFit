@@ -30,13 +30,15 @@ Visitors do not need their own Gemini API key. The sample inputs are fictional; 
 
 The browser sends the input text to a Flask backend, which calls the Gemini API and validates the structured response. The review checks whether quoted evidence appears in the supplied documents and rejects new numeric strings in rewritten bullets. Invalid output gets one repair attempt.
 
-Three prompt patterns guide the feedback:
-
-- **Persona:** A recruiter helping students and recent graduates improve their resumes.
-- **Few-shot examples:** Two examples demonstrate source-based comparisons and honest rewrites. These can be toggled in the workspace.
-- **Iterative refinement:** The original bullet, latest draft, and requested change guide each revision.
-
 Requirement coverage is calculated from the extracted requirements: Required items have weight 2 and Preferred items weight 1; Supported earns full credit, Partial half, and Not shown zero. **It is not an ATS score or a hiring prediction.**
+
+## Prompt engineering
+
+ResumeFit uses three prompt engineering techniques, implemented in [prompts.py](prompts.py):
+
+1. **Persona prompting:** Gemini is instructed to act as a recruiter helping students and recent graduates. It gives practical feedback based on the resume and job description, using the supplied experience as evidence and preserving the applicant's actual role.
+2. **Few-shot prompting:** Two examples show how to evaluate resume evidence, distinguish supported experience from gaps, and improve bullet points without inventing experience. These examples are included when **Use example-guided feedback** is enabled in the workspace.
+3. **Iterative refinement:** Users can request changes such as "Make it shorter." Gemini receives the original bullet, its latest suggested version, and the user's feedback to produce another version, with the original text serving as the factual reference.
 
 ## Limitations and privacy
 
