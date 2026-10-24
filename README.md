@@ -1,5 +1,7 @@
 # ResumeFit
 
+**Live website:** [resumefit-topaz.vercel.app](https://resumefit-topaz.vercel.app/)
+
 A website that compares a resume with a job description, shows supporting evidence, and helps rewrite existing bullet points. Built for the CS4680 AI Assistant Project.
 
 The frontend is HTML, CSS, and JavaScript. A Flask backend handles uploads and calls the Gemini API. Visitors do not enter your Gemini API key; the key is configured on the server.
