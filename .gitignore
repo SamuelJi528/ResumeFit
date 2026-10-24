@@ -17,3 +17,45 @@ resume_review.txt
 *.zip
 .coverage
 htmlcov/
+
+# Secrets and local credentials (keep .env.example blank).
+.envrc
+secrets.toml
+secrets.json
+secrets.yaml
+secrets.yml
+credentials.json
+*-credentials.json
+*service-account*.json
+*service_account*.json
+client_secret*.json
+*.pem
+*.key
+*.p12
+*.pfx
+.aws/
+.ssh/
+.codex/
+.agents/
+.gemini/
+/secrets/
+
+# Private documents, local app data, and generated output.
+/uploads/
+/private/
+/reports/
+/instance/
+*.bak
+*.tmp
+Thumbs.db
+Desktop.ini
+
+# Python tooling and build output.
+*.pyo
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+build/
+dist/
+*.egg-info/

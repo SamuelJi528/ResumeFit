@@ -22,6 +22,8 @@ Edit `.env` and set your own `GEMINI_API_KEY`. Then run:
 
 Open `http://127.0.0.1:8000`. The Windows launcher `run_windows.bat` can also install packages and start the server. Follow the setup steps above to configure your API key.
 
+Keep your real key only in the local `.env` file or your hosting provider's environment settings. `.gitignore` excludes `.env`, local credential files, and private upload folders. Keep `.env.example` blank and do not paste credentials into Python, JavaScript, or documentation. Ignore rules do not remove secrets from files already committed.
+
 On macOS/Linux, create the environment with `python3 -m venv .venv`, use `.venv/bin/python` for the commands, and copy the example with `cp .env.example .env`.
 
 ## Deploy the website
@@ -110,3 +112,5 @@ Coverage uses weights 2 for Required and 1 for Preferred; Supported receives ful
 ```
 
 The suite uses controlled Gemini responses and does not spend API credits. Complete a real-key test on the deployed website before your presentation. See `docs/VALIDATION.md`, `docs/PRESENTATION.md`, and `docs/ASSIGNMENT_CHECKLIST.md`.
+
+For the frontend state regression tests, use Node.js 22 or newer and run `node --test tests/test_frontend.cjs`. Node.js is only needed for those tests.

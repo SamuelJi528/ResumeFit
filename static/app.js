@@ -48,6 +48,9 @@ function updateInputs() {
   document.querySelectorAll(".refine-button").forEach((button) => {
     button.disabled = state.busy || isStale();
   });
+  document.querySelectorAll(".refine-input").forEach((input) => {
+    input.disabled = state.busy || isStale();
+  });
 }
 
 function showError(message) {
@@ -78,9 +81,6 @@ function setBusy(busy, mode = "review") {
   $("#review-form").setAttribute("aria-busy", String(busy));
   $("#loading-panel").hidden = !busy || mode !== "review";
   $("#empty-state").hidden = Boolean(state.result) || busy;
-  document
-    .querySelectorAll(".refine-input")
-    .forEach((input) => (input.disabled = busy || isStale()));
   updateInputs();
 }
 
