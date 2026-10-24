@@ -103,7 +103,8 @@ class GenerationLimits:
 def create_app(test_config=None):
     if test_config is None:
         load_dotenv(ROOT / ".env")
-    app = Flask(__name__)
+    # Vercel serves public/ from its CDN; Flask serves the same URLs locally.
+    app = Flask(__name__, static_folder="public/static", static_url_path="/static")
     app.config.update(
         MAX_CONTENT_LENGTH=MAX_FILE_BYTES + 65536,
         GEMINI_API_KEY=os.getenv("GEMINI_API_KEY", ""),

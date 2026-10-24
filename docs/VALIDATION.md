@@ -13,7 +13,9 @@ Automated tests cover output/source validation, number checks, prompt examples, 
 
 Browser checks exercise the actual frontend/backend flow with controlled AI responses. Actual Gemini quality, your API account access, and a public hosting deployment still need verification.
 
-At delivery, 61 automated tests passed. Desktop and phone browser checks completed uploads, reviews, revisions, report download, changed-input handling, clearing, and keyboard tab navigation without browser errors or horizontal overflow. The test API key did not appear in browser responses. Gunicorn served the homepage and health endpoint successfully. No real Gemini generation or public deployment was performed in this environment.
+The earlier development baseline passed 61 automated tests. Desktop and phone browser checks completed uploads, reviews, revisions, report download, changed-input handling, clearing, and keyboard tab navigation without browser errors or horizontal overflow. The test API key did not appear in browser responses. No real Gemini generation or public Vercel deployment was performed in that baseline.
+
+The Vercel preparation adds checks for public asset placement and local serving, HTTPS origin validation and client IP handling behind the proxy, and two frontend regressions for refinement controls. Run the frontend tests with `node --test tests/test_frontend.cjs` using Node.js 22 or newer. Vercel configuration is checked against its official schema; a successful live deployment still requires verification in Vercel.
 
 ## Before presenting
 
@@ -27,4 +29,4 @@ At delivery, 61 automated tests passed. Desktop and phone browser checks complet
 - [ ] Test the optional demo code if configured.
 - [ ] Measure generation time and rehearse the live presentation.
 
-The Windows launcher and Docker deployment need checking on their respective environments. Development testing runs on Linux. No real Gemini API credentials are available in the development environment.
+The Python and frontend suites also run on Windows. The interactive Windows launcher and a real Vercel build/Gemini request still need checking in their respective environments. Automated tests do not require real Gemini credentials.

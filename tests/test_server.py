@@ -1,5 +1,6 @@
 import io
 import json
+from pathlib import Path
 
 import pytest
 
@@ -34,6 +35,17 @@ def test_home_and_assets_do_not_expose_key(client):
         assert "'self'" in response.headers["Content-Security-Policy"]
     assert client.get("/.env").status_code == 404
     assert client.get("/providers.py").status_code == 404
+
+
+def test_home_assets_match_vercel_public_files(client):
+    root = Path(__file__).resolve().parents[1]
+    home = client.get("/").get_data(as_text=True)
+    for filename in ("app.js", "styles.css", "favicon.svg"):
+        url = f"/static/{filename}"
+        asset = root / "public" / "static" / filename
+        assert asset.is_file(), f"Vercel must serve {url} from public/"
+        assert url in home
+        assert client.get(url).data == asset.read_bytes()
 
 
 def test_complete_review_refinement_and_export(client, resume, job):
@@ -76,6 +88,21 @@ def test_cross_origin_post_rejected(client, resume, job):
 
 def test_same_origin_allowed(client, resume, job):
     assert client.post("/api/review", json={"resume": resume, "job": job}, headers={"Origin": "http://localhost"}).status_code == 200
+
+
+def test_https_origin_and_client_ip_behind_vercel_proxy(app, monkeypatch, resume, job):
+    monkeypatch.setenv("TRUST_PROXY", "1")
+    proxy_app = server.create_app(dict(app.config))
+    client = proxy_app.test_client()
+    headers = {"Origin": "https://resumefit.vercel.app",
+               "X-Forwarded-Proto": "https", "X-Forwarded-For": "203.0.113.7"}
+    response = client.post("/api/review", base_url="http://resumefit.vercel.app",
+                           json={"resume": resume, "job": job}, headers=headers)
+    assert response.status_code == 200
+    assert "203.0.113.7" in proxy_app.extensions["generation_limits"].clients
+    headers["Origin"] = "https://other.example"
+    assert client.post("/api/review", base_url="http://resumefit.vercel.app",
+                       json={"resume": resume, "job": job}, headers=headers).status_code == 403
 
 
 def test_optional_access_code(app, resume, job):

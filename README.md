@@ -28,7 +28,9 @@ On macOS/Linux, create the environment with `python3 -m venv .venv`, use `.venv/
 
 ## Deploy the website
 
-Follow `docs/DEPLOYMENT.md`. The package includes a Render blueprint, a Dockerfile, and a production Gunicorn command. Upload the source to GitHub and configure the key in the host's environment settings.
+Follow [the Vercel deployment guide](docs/DEPLOYMENT.md). Import `SamuelJi528/ResumeFit` into Vercel, use the **Flask** preset, and set `GEMINI_API_KEY` in Vercel's environment settings. Keep the Root Directory at the repository root and leave build/output overrides unset.
+
+`vercel.json` configures the Flask function with a 300-second maximum duration. `.python-version` selects Python 3.12. Vercel serves `public/static/` from its CDN; Flask serves the same `/static/` URLs when running locally.
 
 This needs a Python web service. GitHub Pages alone cannot run the backend. You do not need Streamlit, Node.js, or a local LLM.
 
@@ -69,8 +71,8 @@ The workspace checkbox disables examples for a comparison while keeping the pers
 | --- | --- |
 | `server.py` | Flask routes, input validation, access code, and request limits |
 | `templates/index.html` | Website markup |
-| `static/styles.css` | Responsive layout and styling |
-| `static/app.js` | Uploads, API calls, results, tabs, revisions, and downloads |
+| `public/static/styles.css` | Responsive layout and styling |
+| `public/static/app.js` | Uploads, API calls, results, tabs, revisions, and downloads |
 | `providers.py` | Gemini REST request; reads the server-supplied key |
 | `prompts.py` | Persona, examples, and refinement prompts |
 | `models.py` | Output schema, source checks, and coverage calculation |
@@ -86,11 +88,11 @@ The workspace checkbox disables examples for a comparison while keeping the pers
 | `GEMINI_MODEL` | `gemini-3.5-flash-lite` | Model available to your API project |
 | `SITE_ACCESS_CODE` | Empty | Optional shared class-demo code |
 | `REQUESTS_PER_MINUTE` | `5` | Review/refinement attempts per IP |
-| `DAILY_GENERATION_LIMIT` | `100` | Total review/refinement attempts per UTC day |
-| `TRUST_PROXY` | `0` | Set to 1 only behind one trusted reverse proxy |
-| `PORT` | `8000` | Local port; the hosting platform supplies its own |
+| `DAILY_GENERATION_LIMIT` | `100` | Review/refinement attempts per instance per UTC day |
+| `TRUST_PROXY` | `0` | Use `1` on Vercel; keep `0` locally |
+| `PORT` | `8000` | Local port; Vercel manages its function listener |
 
-The supplied production command uses one worker and four threads. At most two generations run at once. Limits are held in memory, reset when the process restarts, and do not act as a billing cap. Each attempt can make two Gemini calls if output needs repair. Multiple workers/instances would each have separate limits; use shared storage if scaling.
+Vercel runs `server.py` as one Flask function and can scale it across multiple instances. At most two generations run at once per instance. Request and daily limits are held in memory, reset when an instance restarts, and do not act as a site-wide quota or billing cap. Each attempt can make two Gemini calls if output needs repair. Use shared storage for site-wide limits if scaling.
 
 For a public class demo, set an access code and share it with the people evaluating the project. The code is separate from your Gemini key.
 

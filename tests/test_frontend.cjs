@@ -27,7 +27,7 @@ function workspace() {
       },
     },
   });
-  const source = fs.readFileSync(path.join(__dirname, "../static/app.js"), "utf8");
+  const source = fs.readFileSync(path.join(__dirname, "../public/static/app.js"), "utf8");
   // Exercise UI state synchronously without making startup network requests.
   vm.runInContext(source.replace(/\ninitialize\(\);\s*$/, ""), context);
   vm.runInContext(`
